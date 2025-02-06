@@ -773,7 +773,35 @@ button[aria-label]::before {
   }
 }
 
-.header {
+.hero__main {
+  display: grid;
+  grid-template-columns: 60% auto;
+  grid-template-areas: "body resouces-preview" "metrics resouces-preview";
+}
+.hero__body {
+  grid-area: body;
+  padding-top: 9.375rem;
+  padding-right: 9.375rem;
+  padding-bottom: 6.25rem;
+}
+.hero__subtitle {
+  font-size: clamp(1.125rem, 0.9338235294rem + 0.7843137255vw, 1.875rem);
+  font-family: var(--font-family-accent);
+  font-weight: 500;
+  color: var(--color-dark-40);
+}
+.hero__subtitle:not(:last-child) {
+  margin-bottom: 1.875rem;
+}
+.hero__metrics {
+  grid-area: metrics;
+}
+.hero__resources-preview {
+  grid-area: resources-preview;
+}
+
+.header,
+.footer {
   display: none !important;
 }
 
