@@ -250,6 +250,7 @@ svg * {
   --font-family-accent: "Kumbg Sans", sans-serif;
   --container-width: 100rem;
   --container-padding-x: 1rem;
+  --scroll-bar-width: 0.3125rem;
   --transition-duration: 0.2s;
 }
 @media (width <= 90.06125rem) {
@@ -475,6 +476,24 @@ button[aria-label]::before {
   width: 2.75rem;
   height: 2.75rem;
   content: "";
+}
+
+::-webkit-scrollbar {
+  width: var(--scroll-bar-width);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-accent);
+  border-radius: var(--scroll-bar-width);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  cursor: pointer;
+}
+
+::-webkit-scrollbar-track {
+  background: #1e1e1e;
+  border-radius: var(--scroll-bar-width);
 }
 
 .icon {
@@ -1584,7 +1603,7 @@ button[aria-label]::before {
     translate: -50%;
     content: "";
     bottom: 0;
-    width: 100vw;
+    width: calc(100vw - var(--scroll-bar-width));
     height: 0.0625rem;
     background-color: var(--color-dark-15);
   }

@@ -1,0 +1,20 @@
+@use "helpers" as *;
+
+::-webkit-scrollbar {
+   width: var(--scroll-bar-width);
+}
+
+::-webkit-scrollbar-thumb {
+   background-color: var(--color-accent);
+
+   border-radius: var(--scroll-bar-width);
+}
+
+::-webkit-scrollbar-thumb:hover {
+   cursor: pointer;
+}
+
+::-webkit-scrollbar-track {
+   background: #1e1e1e;
+   border-radius: var(--scroll-bar-width);
+}

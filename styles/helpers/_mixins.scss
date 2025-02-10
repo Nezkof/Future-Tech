@@ -70,7 +70,7 @@
       @include abs-x();
       content: "";
       #{$property}: 0;
-      width: 100vw;
+      width: calc(100vw - var(--scroll-bar-width));
       height: rem(1);
       background-color: var(--color-dark-15);
    }
