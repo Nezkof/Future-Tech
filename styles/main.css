@@ -889,9 +889,37 @@ button[aria-label]::before {
   }
 }
 
+.metrics {
+  --columns: 3;
+}
+.metrics--4-cols {
+  --columns: 4;
+  text-align: center;
+}
+@media (width > 63.99875rem) {
+  .metrics--4-cols .metrics__item:nth-child(4n) {
+    padding-right: 0;
+  }
+}
+@media (width <= 63.99875rem) {
+  .metrics--4-cols {
+    --columns: 2;
+    padding-inline: 0;
+  }
+  .metrics--4-cols .metrics__item {
+    border-bottom: var(--border);
+  }
+  .metrics--4-cols .metrics__item:nth-child(odd) {
+    padding-left: var(--container-padding-x);
+  }
+  .metrics--4-cols .metrics__item:nth-child(even) {
+    border-right: none;
+    padding-right: var(--container-padding-x);
+  }
+}
 .metrics__list {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(var(--columns), 1fr);
 }
 .metrics__item {
   display: flex;
@@ -1417,6 +1445,24 @@ button[aria-label]::before {
 @media (width <= 63.99875rem) {
   .tabs__buttons {
     width: max-content;
+  }
+}
+.tabs__buttons--compact {
+  display: inline-flex;
+  padding: 0.625rem;
+  background-color: var(--color-dark);
+  border-radius: 0.625rem;
+  column-gap: 0.625rem;
+}
+.tabs__buttons--compact.is-active {
+  background-color: var(--color-dark-15);
+}
+.tabs__buttons--compact .tabs__button {
+  padding-block: 1.125rem;
+}
+@media (width <= 90.06125rem) {
+  .tabs__buttons--compact .tabs__button {
+    padding-block: 0.875rem;
   }
 }
 .tabs__button {
@@ -2246,6 +2292,45 @@ button[aria-label]::before {
 .blog-details__main h5:not(:last-child),
 .blog-details__main h6:not(:last-child) {
   margin-bottom: 1em;
+}
+
+.report-card {
+  display: flex;
+  flex-direction: column;
+  row-gap: clamp(1.25rem, 1.0906862745rem + 0.6535947712vw, 1.875rem);
+  height: 100%;
+}
+.report-card__image {
+  width: 100%;
+  height: 18.125rem;
+  object-fit: cover;
+  border-radius: 0.75rem;
+}
+@media (width <= 47.99875rem) {
+  .report-card__image {
+    height: 13.9375rem;
+  }
+}
+.report-card__body {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  row-gap: 0.875rem;
+}
+@media (width <= 90.06125rem) {
+  .report-card__body {
+    row-gap: 0.625rem;
+  }
+}
+.report-card__actions {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: 1.25rem;
+}
+@media (width <= 90.06125rem) {
+  .report-card__actions {
+    column-gap: 0.625rem;
+  }
 }
 
 /*# sourceMappingURL=main.css.map */
