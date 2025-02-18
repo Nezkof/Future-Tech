@@ -1,8 +1,8 @@
-import BaseComponent from "./BaseComponent.js";
+import ProxyComponent from "./ProxyComponent.js";
 
 const rootSelector = "[data-js-tabs]";
 
-class Tabs extends BaseComponent {
+class Tabs extends ProxyComponent {
    selectors = {
       root: rootSelector,
       button: "[data-js-tabs-button]",

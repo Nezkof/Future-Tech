@@ -1,9 +1,7 @@
-class BaseComponent {
+class ProxyComponent {
    constructor() {
-      if (this.constructor === BaseComponent) {
-         throw new Error(
-            "Невозможно создать экземпляр абстрактного класса BaseComponent!"
-         );
+      if (this.constructor === ProxyComponent) {
+         throw new Error("Abstract class object creation error");
       }
    }
 
@@ -26,12 +24,9 @@ class BaseComponent {
       });
    }
 
-   /**
-    * Перерисовка UI в ответ на обновление состояния
-    */
    updateUI() {
-      throw new Error("Необходимо реализовать метод updateUI!");
+      throw new Error("No updateUI method");
    }
 }
 
-export default BaseComponent;
+export default ProxyComponent;
