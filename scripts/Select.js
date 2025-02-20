@@ -1,4 +1,5 @@
 import ProxyComponent from "./ProxyComponent.js";
+import MatchMedia from "./MatchMedia.js";
 
 const rootSelector = "[data-js-select]";
 
@@ -53,9 +54,68 @@ class Select extends ProxyComponent {
             this.optionElements[this.originalControlElement.selectedIndex],
       });
       this.fixDropDownPosition();
+      this.updateTabIndexes();
+      this.bindEvents();
    }
 
-   updateUI() {}
+   updateUI() {
+      const { isExpanded, currentOptionIndex, selectedOptionElement } =
+         this.state;
+
+      const newSelectedOptionValue = selectedOptionElement.textContent.trim();
+
+      const updateOriginalControl = () => {
+         this.originalControlElement.value = newSelectedOptionValue;
+      };
+
+      const updateButton = () => {
+         this.buttonElement.textContent = newSelectedOptionValue;
+         this.buttonElement.classList.toggle(
+            this.stateClasses.isExpanded,
+            isExpanded
+         );
+         this.buttonElement.setAttribute(
+            this.stateAttributes.ariaExpanded,
+            isExpanded
+         );
+         this.buttonElement.setAttribute(
+            this.stateAttributes.ariaActiveDescendant,
+            this.optionElements[currentOptionIndex].id
+         );
+      };
+
+      const updateDropdown = () => {
+         this.dropdownElement.classList.toggle(
+            this.stateClasses.isExpanded,
+            isExpanded
+         );
+      };
+
+      const updateOptions = () => {
+         this.optionElements.forEach((optionElement, index) => {
+            const isCurrent = currentOptionIndex === index;
+            const isSelected = selectedOptionElement === optionElement;
+
+            optionElement.classList.toggle(
+               this.stateClasses.isCurrent,
+               isCurrent
+            );
+            optionElement.classList.toggle(
+               this.stateClasses.isSelected,
+               isSelected
+            );
+            optionElement.setAttribute(
+               this.stateAttributes.ariaSelected,
+               isSelected
+            );
+         });
+      };
+
+      updateOriginalControl();
+      updateButton();
+      updateDropdown();
+      updateOptions();
+   }
 
    fixDropDownPosition() {
       const viewportWidth = document.documentElement.clientWidth;
@@ -74,6 +134,141 @@ class Select extends ProxyComponent {
       this.dropdownElement.classList.toggle(
          this.stateClasses.isOnTheRightSide,
          !isButtonOnTheLeftViewPortSide
+      );
+   }
+
+   updateTabIndexes(isMobileDevice = MatchMedia.mobile.matches) {
+      this.originalControlElement.tabIndex = isMobileDevice ? 0 : -1;
+      this.buttonElement.tabIndex = isMobileDevice ? -1 : 0;
+   }
+
+   onMobileMatchMediaChange = (event) => {
+      this.updateTabIndexes(event.matches);
+   };
+
+   toggleExpandedState = () => {
+      this.state.isExpanded = !this.state.isExpanded;
+   };
+
+   expand() {
+      this.state.isExpanded = true;
+   }
+
+   collapse() {
+      this.state.isExpanded = false;
+   }
+
+   get isNeedToExpand() {
+      const isButtonFocused = document.activeElement === this.buttonElement;
+
+      return !this.state.isExpanded && isButtonFocused;
+   }
+
+   selectCurrentOption() {
+      this.state.selectedOptionElement =
+         this.optionElements[this.state.currentOptionIndex];
+   }
+
+   onButtonClick = () => {
+      this.toggleExpandedState();
+   };
+
+   onClick = (event) => {
+      const { target } = event;
+      const isOutsideDropdownClick =
+         target.closest(this.selectors.dropdown) !== this.dropdownElement;
+      const isButtonClick = target === this.buttonElement;
+
+      if (!isButtonClick && isOutsideDropdownClick) {
+         this.collapse();
+         return;
+      }
+
+      const isOptionClick = target.matches(this.selectors.option);
+
+      if (isOptionClick) {
+         this.state.selectedOptionElement = target;
+         this.state.currentOptionIndex = [...this.optionElements].findIndex(
+            (optionElement) => optionElement === target
+         );
+         this.collapse();
+      }
+   };
+
+   onArrowUpKeyDown = () => {
+      if (this.isNeedToExpand) {
+         this.expand();
+         return;
+      }
+
+      if (this.state.currentOptionIndex > 0) {
+         this.state.currentOptionIndex--;
+      }
+   };
+
+   onArrowDownKeyDown = () => {
+      if (this.isNeedToExpand) {
+         this.expand();
+         return;
+      }
+
+      if (this.state.currentOptionIndex < this.optionElements.length - 1) {
+         this.state.currentOptionIndex++;
+      }
+   };
+
+   onSpaceKeyDown = () => {
+      if (this.isNeedToExpand) {
+         this.expand();
+         return;
+      }
+
+      this.selectCurrentOption();
+      this.collapse();
+   };
+
+   onEnterKeyDown = () => {
+      if (this.isNeedToExpand) {
+         this.expand();
+         return;
+      }
+
+      this.selectCurrentOption();
+      this.collapse();
+   };
+
+   onKeyDown = (event) => {
+      const { code } = event;
+
+      const action = {
+         ArrowUp: this.onArrowUpKeyDown,
+         ArrowDown: this.onArrowDownKeyDown,
+         Space: this.onSpaceKeyDown,
+         Enter: this.onEnterKeyDown,
+      }[code];
+
+      if (action) {
+         event.preventDefault();
+         action();
+      }
+   };
+
+   onOriginalControlChange = () => {
+      this.state.selectedOptionElement =
+         this.optionElements[this.originalControlElement.selectedIndex];
+   };
+
+   bindEvents() {
+      MatchMedia.mobile.addEventListener(
+         "change",
+         this.onMobileMatchMediaChange
+      );
+      this.buttonElement.addEventListener("click", this.onButtonClick);
+      document.addEventListener("click", this.onClick);
+      this.rootElement.addEventListener("keydown", this.onKeyDown);
+      this.originalControlElement.addEventListener(
+         "change",
+         this.onOriginalControlChange
       );
    }
 }
