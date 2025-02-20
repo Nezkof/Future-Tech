@@ -12,6 +12,7 @@
 
    @include hover {
       color: var(--color-accent);
+      cursor: pointer;
 
       .checkbox__input {
          border-color: var(--color-accent);
@@ -44,6 +45,14 @@
          content: "✔";
          color: var(--color-light);
          transition-duration: var(--transition-duration);
+      }
+
+      &:user-invalid {
+         border-color: var(--color-red);
+      }
+
+      @include hover {
+         cursor: pointer;
       }
    }
 }
